@@ -89,7 +89,7 @@ body {
 /* 히어로 섹션 */
 .hero-section {
     position: relative;
-    height: 100vh;
+    height: 80vh; /* 전체 높이의 80%로 조정 */
     overflow: hidden;
 }
 
