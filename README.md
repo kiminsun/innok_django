@@ -146,10 +146,22 @@ python manage.py runserver
 전체 Django 기능을 사용하려면 별도의 서버가 필요합니다:
 
 **추천 플랫폼:**
+- **AWS Elastic Beanstalk** ⭐ (가장 추천) - 무료 티어 제공, 쉬운 배포
+- **AWS Lightsail** 💡 - 저렴한 비용 ($5-20/월)
 - **Railway** (https://railway.app) - 무료 티어 제공
 - **Render** (https://render.com) - 무료 티어 제공
 - **Heroku** (유료)
-- **AWS/Azure/GCP** (프로덕션용)
+
+**AWS 배포 가이드:**
+자세한 AWS 배포 방법은 [AWS_DEPLOYMENT_GUIDE.md](AWS_DEPLOYMENT_GUIDE.md) 파일을 참고하세요.
+
+**AWS 서비스 추천:**
+1. **애플리케이션 호스팅**: Elastic Beanstalk (무료 티어 또는 $15-30/월)
+2. **데이터베이스**: RDS MySQL/PostgreSQL ($15-20/월)
+3. **정적 파일**: S3 + CloudFront ($1-5/월)
+4. **도메인**: Route 53 ($0.50/월)
+
+**예상 비용**: 약 $16-52/월 (Elastic Beanstalk 기준)
 
 **프로덕션 설정:**
 
@@ -159,6 +171,8 @@ python manage.py runserver
 - `ALLOWED_HOSTS` 설정
 - `SECRET_KEY` 환경 변수로 관리
 - 데이터베이스 설정 (MySQL 또는 PostgreSQL)
+- 정적 파일 S3 저장 (선택)
+- SSL 인증서 설정
 
 ## 개발 가이드
 
