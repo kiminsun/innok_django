@@ -159,7 +159,17 @@ def build_static_pages():
         )
         print("✓ Copied collected static files")
     
+    # .nojekyll 파일 생성 (Jekyll 처리 비활성화)
+    nojekyll_path = OUTPUT_DIR / '.nojekyll'
+    nojekyll_path.touch()
+    print("✓ Created .nojekyll file")
+    
+    # 빌드 결과 확인
+    html_files = list(OUTPUT_DIR.rglob('*.html'))
     print(f"\n✓ Static site built successfully in {OUTPUT_DIR}")
+    print(f"✓ Generated {len(html_files)} HTML files")
+    for html_file in html_files:
+        print(f"  - {html_file.relative_to(OUTPUT_DIR)}")
 
 if __name__ == '__main__':
     build_static_pages()
