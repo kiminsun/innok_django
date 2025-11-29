@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}고객센터 관리 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h1 class="display-4 fw-bold mb-0">고객센터 관리</h1>
+                <div>
+                    <button class="btn btn-success" onclick="downloadJSON()">JSON 다운로드</button>
+                    <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-secondary">대시보드로</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">업무시간</label>
+                                    <input type="text" class="form-control" id="businessHours" value="{{ data.businessHours }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">대표번호</label>
+                                    <input type="text" class="form-control" id="phone" value="{{ data.phone }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">핸드폰</label>
+                                    <input type="text" class="form-control" id="mobile" value="{{ data.mobile }}">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">FAX</label>
+                                    <input type="text" class="form-control" id="fax" value="{{ data.fax }}">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">EMAIL</label>
+                                    <input type="email" class="form-control" id="email" value="{{ data.email }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">주소</label>
+                                    <input type="text" class="form-control" id="address" value="{{ data.address }}" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">인스타그램 URL</label>
+                                    <input type="url" class="form-control" id="instagram" value="{{ data.instagram }}">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">네이버 블로그 URL</label>
+                                    <input type="url" class="form-control" id="blog" value="{{ data.blog }}">
+                                </div>
+                            </div>
+                            
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="saveContact()">저장</button>
+                                <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-secondary btn-lg">취소</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function saveContact() {
+    const data = {
+        businessHours: document.getElementById('businessHours').value,
+        phone: document.getElementById('phone').value,
+        mobile: document.getElementById('mobile').value,
+        fax: document.getElementById('fax').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        instagram: document.getElementById('instagram').value,
+        blog: document.getElementById('blog').value
+    };
+    
+    fetch('{% url "admin_panel:manage_contact" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('저장되었습니다.');
+            location.reload();
+        } else {
+            alert('저장 중 오류가 발생했습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('저장 중 오류가 발생했습니다.');
+    });
+}
+
+function downloadJSON() {
+    const data = {
+        businessHours: document.getElementById('businessHours').value,
+        phone: document.getElementById('phone').value,
+        mobile: document.getElementById('mobile').value,
+        fax: document.getElementById('fax').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        instagram: document.getElementById('instagram').value,
+        blog: document.getElementById('blog').value
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'contact.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}공지사항 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <h1 class="h2 fw-bold mb-3">공지사항</h1>
+            </div>
+        </div>
+        
+        <!-- 검색 폼 -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <form method="get" action="{% url 'main:notice_list' %}">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="제목, 내용, 글쓴이로 검색" value="{{ search_query }}">
+                        <button class="btn btn-primary" type="submit">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 공지사항 테이블 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>글쓴이</th>
+                                <th>조회</th>
+                                <th>등록일자</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for notice in page_obj %}
+                            <tr>
+                                <td>{{ notice.id }}</td>
+                                <td><a href="{% url 'main:notice_detail' notice.pk %}" class="text-decoration-none">{{ notice.title }}</a></td>
+                                <td>{{ notice.author }}</td>
+                                <td>{{ notice.views }}</td>
+                                <td>{{ notice.created_at|date:"Y-m-d" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">등록된 공지사항이 없습니다.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 페이지네이션 -->
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">이전</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">다음</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

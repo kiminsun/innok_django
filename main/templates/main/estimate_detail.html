@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}{{ estimate.title }} - 견적문의 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {% if error_message %}
+                <div class="alert alert-danger">{{ error_message }}</div>
+                {% endif %}
+                
+                <!-- 비밀번호 입력 폼 -->
+                {% if not estimate.views %}
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">비밀번호 확인</h5>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="password" class="form-label">비밀번호</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">확인</button>
+                            <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary">목록으로</a>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                
+                <!-- 견적문의 상세 내용 -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">{{ estimate.title }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <small class="text-muted">
+                                <strong>글쓴이:</strong> {{ estimate.author }} | 
+                                <strong>조회수:</strong> {{ estimate.views }} | 
+                                <strong>등록일자:</strong> {{ estimate.created_at|date:"Y-m-d H:i" }}
+                            </small>
+                        </div>
+                        
+                        <div class="content mb-4">
+                            <h5>문의 내용</h5>
+                            {{ estimate.content|linebreaks }}
+                        </div>
+                        
+                        {% if estimate.answer %}
+                        <div class="answer-section border-top pt-4">
+                            <h5 class="text-success">답변</h5>
+                            <div class="answer-content">
+                                {{ estimate.answer|linebreaks }}
+                            </div>
+                            <small class="text-muted">답변일자: {{ estimate.answered_at|date:"Y-m-d H:i" }}</small>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">
+                            답변 대기 중입니다. 빠른 시일 내에 답변 드리겠습니다.
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary">목록으로</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

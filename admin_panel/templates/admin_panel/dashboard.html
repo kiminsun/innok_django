@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}관리자 대시보드 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold">관리자 대시보드</h1>
+                <p class="lead">환영합니다, {{ user.username }}님</p>
+                <a href="{% url 'admin_panel:logout' %}" class="btn btn-outline-danger">로그아웃</a>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">사업소개 관리</h5>
+                        <p class="card-text">프로젝트 데이터를 관리합니다</p>
+                        <a href="{% url 'admin_panel:manage_projects' %}" class="btn btn-primary">관리하기</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">회사소개 관리</h5>
+                        <p class="card-text">회사 정보를 관리합니다</p>
+                        <a href="{% url 'admin_panel:manage_about' %}" class="btn btn-primary">관리하기</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">고객센터 관리</h5>
+                        <p class="card-text">연락처 정보를 관리합니다</p>
+                        <a href="{% url 'admin_panel:manage_contact' %}" class="btn btn-primary">관리하기</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">게시판 관리</h5>
+                        <p class="card-text">공지사항, 견적문의, FAQ 관리</p>
+                        <a href="/admin/" class="btn btn-primary">관리하기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

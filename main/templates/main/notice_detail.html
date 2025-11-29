@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ notice.title }} - 공지사항 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">{{ notice.title }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <small class="text-muted">
+                                <strong>글쓴이:</strong> {{ notice.author }} | 
+                                <strong>조회수:</strong> {{ notice.views }} | 
+                                <strong>등록일자:</strong> {{ notice.created_at|date:"Y-m-d H:i" }}
+                            </small>
+                        </div>
+                        
+                        {% if notice.attachment %}
+                        <div class="mb-3">
+                            <a href="{{ notice.attachment.url }}" class="btn btn-sm btn-outline-primary" download>첨부파일 다운로드</a>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="content">
+                            {{ notice.content|linebreaks }}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'main:notice_list' %}" class="btn btn-secondary">목록으로</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

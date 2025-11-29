@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}사업소개 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-12 text-center">
+                <h1 class="display-4 fw-bold mb-3">사업소개</h1>
+                <p class="lead">전문적이고 차별화된 서비스를 제공합니다</p>
+            </div>
+        </div>
+        
+        <!-- 필터 버튼 -->
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary active" data-type="all">전체</button>
+                    <button type="button" class="btn btn-outline-primary" data-type="specialized">특화사업</button>
+                    <button type="button" class="btn btn-outline-primary" data-type="general">일반사업</button>
+                    <button type="button" class="btn btn-outline-primary" data-type="education">교육사업</button>
+                    <button type="button" class="btn btn-outline-primary" data-type="regulatory">규제전문 에이전시</button>
+                    <button type="button" class="btn btn-outline-primary" data-type="m&a">브랜딩 지원 사업(M&A)</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 프로젝트 갤러리 -->
+        <div class="row g-4" id="projectGallery">
+            <!-- 프로젝트 카드가 여기에 동적으로 로드됩니다 -->
+        </div>
+    </div>
+</section>
+
+<!-- 프로젝트 상세보기 모달 -->
+<div class="modal fade" id="projectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectModalTitle">프로젝트 상세</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="projectModalBody">
+                <!-- 상세 내용이 여기에 로드됩니다 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 프로젝트 데이터 로드
+    function loadProjects(type = 'all') {
+        fetch('{% url "main:business" %}?format=json')
+            .then(response => response.json())
+            .then(data => {
+                displayProjects(data, type);
+            })
+            .catch(error => {
+                console.error('Error loading projects:', error);
+            });
+    }
+    
+    function displayProjects(data, filterType) {
+        const gallery = document.getElementById('projectGallery');
+        gallery.innerHTML = '';
+        
+        const types = ['specialized', 'general', 'education', 'regulatory', 'm&a'];
+        types.forEach(type => {
+            if (filterType === 'all' || filterType === type) {
+                const projects = data[type] || [];
+                projects.forEach(project => {
+                    const card = createProjectCard(project, type);
+                    gallery.appendChild(card);
+                });
+            }
+        });
+    }
+    
+    function createProjectCard(project, type) {
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+        col.setAttribute('data-type', type);
+        
+        col.innerHTML = `
+            <div class="card h-100 shadow-sm business-card" onclick="showProjectDetail(${project.id}, '${type}')">
+                <img src="${project.image || '/static/images/placeholder.jpg'}" class="card-img-top" alt="${project.title}" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">${project.title}</h5>
+                    <p class="card-text">${project.description || ''}</p>
+                    <small class="text-muted">${project.startDate} ~ ${project.endDate}</small>
+                </div>
+            </div>
+        `;
+        
+        return col;
+    }
+    
+    function showProjectDetail(id, type) {
+        // 프로젝트 상세 정보를 모달에 표시
+        fetch(`{% url "main:business" %}?id=${id}&type=${type}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('projectModalTitle').textContent = data.title;
+                document.getElementById('projectModalBody').innerHTML = `
+                    <img src="${data.image || '/static/images/placeholder.jpg'}" class="img-fluid mb-3" alt="${data.title}">
+                    <p><strong>설명:</strong> ${data.description || ''}</p>
+                    <p><strong>기간:</strong> ${data.startDate} ~ ${data.endDate}</p>
+                    <p><strong>고객사:</strong> ${data.client || ''}</p>
+                `;
+                new bootstrap.Modal(document.getElementById('projectModal')).show();
+            });
+    }
+    
+    // 필터 버튼 이벤트
+    document.querySelectorAll('[data-type]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            loadProjects(this.dataset.type);
+        });
+    });
+    
+    // 페이지 로드 시 프로젝트 로드
+    loadProjects();
+</script>
+{% endblock %}
+

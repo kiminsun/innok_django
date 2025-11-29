@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}관리자 로그인 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">관리자 로그인</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if error_message %}
+                        <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <button type="submit" class="btn btn-primary w-100">로그인</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

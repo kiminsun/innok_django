@@ -1,0 +1,119 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="INNOK - 의료제품 GMP 교육 및 컨설팅 전문 기업">
+    <title>{% block title %}INNOK - 의료제품 GMP 교육 및 컨설팅{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    {% bootstrap_css %}
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'img/logo.jpg' %}" alt="INNOK" class="navbar-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/business">사업소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">회사소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">고객센터</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:notice_list' %}">공지사항</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:estimate_list' %}">견적문의</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:faq_list' %}">자주하는질문</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:pr_center' %}">PR CENTER</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 컨텐츠 -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">INNOK</h5>
+                    <p>의료제품 GMP 교육 및 컨설팅 전문 기업</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">관련 링크</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://www.mfds.go.kr" target="_blank" class="text-light text-decoration-none">식약처</a></li>
+                        <li><a href="https://www.gov.kr" target="_blank" class="text-light text-decoration-none">정부24</a></li>
+                        <li><a href="https://www.drugsafe.or.kr" target="_blank" class="text-light text-decoration-none">의약품안전나라</a></li>
+                        <li><a href="https://www.hira.or.kr" target="_blank" class="text-light text-decoration-none">HIRA</a></li>
+                        <li><a href="https://www.neca.or.kr" target="_blank" class="text-light text-decoration-none">NECA</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">SNS</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://blog.naver.com/iosis1218" target="_blank" class="text-light text-decoration-none">네이버 블로그</a></li>
+                        <li><a href="https://www.instagram.com/innok_corporation/" target="_blank" class="text-light text-decoration-none">인스타그램</a></li>
+                        <li><a href="{% url 'main:contact' %}" class="text-light text-decoration-none">오시는 길</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 INNOK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    {% bootstrap_javascript %}
+    
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

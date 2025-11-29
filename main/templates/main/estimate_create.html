@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}견적문의 작성 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">견적문의 작성</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <div class="alert alert-info">
+                                <strong>안내:</strong> 비밀번호를 입력하시면 작성하신 글을 수정하거나 삭제할 수 있습니다.
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary btn-lg">등록하기</button>
+                                <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary btn-lg">목록으로</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

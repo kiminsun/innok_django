@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}회사소개 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container" data-aos="fade-up">
+        <div class="row mb-5">
+            <div class="col-lg-12 text-center">
+                <h1 class="display-4 fw-bold mb-3">회사소개</h1>
+            </div>
+        </div>
+        
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{% static 'img/ceo.JPG' %}" alt="INNOK 회사 소개" class="img-fluid rounded shadow" id="companyImage">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="mb-4">INNOK</h2>
+                <p class="lead mb-4" id="companySlogan">
+                    보건복지부, 식약처, 교육부 등 다양한 정부 기관에서 쌓은,<br>
+                    23년간의 광범위한 약무행정실무 경력을 바탕으로,<br>
+                    차별·특화된 전문 맞춤 상담을 통하여,<br>
+                    고객의 의뢰에 대한 최선의 해답을 제시해 드리겠습니다.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row" id="companyHistory">
+            <!-- 회사 연혁이 여기에 표시됩니다 -->
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // JSON에서 회사 정보 로드
+    fetch('/data/about.json')
+        .then(response => response.json())
+        .then(data => {
+            if (data.representativeImage) {
+                document.getElementById('companyImage').src = data.representativeImage;
+            }
+            if (data.companySlogan) {
+                document.getElementById('companySlogan').innerHTML = data.companySlogan.replace(/\n/g, '<br>');
+            }
+            
+            // 연혁 표시
+            if (data.history && data.history.length > 0) {
+                const historyDiv = document.getElementById('companyHistory');
+                let historyHTML = '<div class="col-12"><h3 class="mb-4">회사 연혁</h3><div class="timeline">';
+                data.history.forEach(item => {
+                    historyHTML += `
+                        <div class="timeline-item mb-4">
+                            <h5>${item.year}</h5>
+                            <p>${item.description}</p>
+                        </div>
+                    `;
+                });
+                historyHTML += '</div></div>';
+                historyDiv.innerHTML = historyHTML;
+            }
+        });
+</script>
+{% endblock %}
+

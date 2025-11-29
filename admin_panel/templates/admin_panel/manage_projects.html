@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}사업소개 관리 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h1 class="display-4 fw-bold mb-0">사업소개 관리</h1>
+                <div>
+                    <button class="btn btn-success" onclick="downloadJSON()">JSON 다운로드</button>
+                    <a href="{% url 'admin_panel:dashboard' %}" class="btn btn-secondary">대시보드로</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-4" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#specialized">특화사업</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#general">일반사업</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#education">교육사업</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#regulatory">규제전문 에이전시</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#m&a">브랜딩 지원 사업(M&A)</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content">
+                            {% for type, projects in data.items %}
+                            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ type }}" role="tabpanel">
+                                <button class="btn btn-primary mb-3" onclick="addProject('{{ type }}')">프로젝트 추가</button>
+                                <div id="projects-{{ type }}">
+                                    {% for project in projects %}
+                                    <div class="card mb-3 project-item" data-id="{{ project.id }}">
+                                        <div class="card-body">
+                                            <h5>{{ project.title }}</h5>
+                                            <p>{{ project.description }}</p>
+                                            <button class="btn btn-sm btn-warning" onclick="editProject('{{ type }}', {{ project.id }})">수정</button>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteProject('{{ type }}', {{ project.id }})">삭제</button>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 프로젝트 추가/수정 모달 -->
+<div class="modal fade" id="projectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">프로젝트 추가/수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm">
+                    <input type="hidden" id="projectType" name="type">
+                    <input type="hidden" id="projectId" name="id">
+                    <div class="mb-3">
+                        <label class="form-label">제목</label>
+                        <input type="text" class="form-control" id="projectTitle" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">설명</label>
+                        <textarea class="form-control" id="projectDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">이미지 URL</label>
+                        <input type="text" class="form-control" id="projectImage" name="image">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">시작일</label>
+                            <input type="date" class="form-control" id="projectStartDate" name="startDate">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">종료일</label>
+                            <input type="date" class="form-control" id="projectEndDate" name="endDate">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">고객사</label>
+                        <input type="text" class="form-control" id="projectClient" name="client">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" onclick="saveProject()">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const projectData = {{ data_json|safe }};
+
+function addProject(type) {
+    document.getElementById('projectType').value = type;
+    document.getElementById('projectId').value = '';
+    document.getElementById('projectForm').reset();
+    new bootstrap.Modal(document.getElementById('projectModal')).show();
+}
+
+function editProject(type, id) {
+    const project = projectData[type].find(p => p.id === id);
+    if (project) {
+        document.getElementById('projectType').value = type;
+        document.getElementById('projectId').value = id;
+        document.getElementById('projectTitle').value = project.title || '';
+        document.getElementById('projectDescription').value = project.description || '';
+        document.getElementById('projectImage').value = project.image || '';
+        document.getElementById('projectStartDate').value = project.startDate || '';
+        document.getElementById('projectEndDate').value = project.endDate || '';
+        document.getElementById('projectClient').value = project.client || '';
+        new bootstrap.Modal(document.getElementById('projectModal')).show();
+    }
+}
+
+function deleteProject(type, id) {
+    if (confirm('정말 삭제하시겠습니까?')) {
+        projectData[type] = projectData[type].filter(p => p.id !== id);
+        saveAllProjects();
+    }
+}
+
+function saveProject() {
+    const type = document.getElementById('projectType').value;
+    const id = document.getElementById('projectId').value;
+    const project = {
+        id: id || Date.now(),
+        title: document.getElementById('projectTitle').value,
+        description: document.getElementById('projectDescription').value,
+        image: document.getElementById('projectImage').value,
+        startDate: document.getElementById('projectStartDate').value,
+        endDate: document.getElementById('projectEndDate').value,
+        client: document.getElementById('projectClient').value
+    };
+    
+    if (id) {
+        const index = projectData[type].findIndex(p => p.id == id);
+        if (index !== -1) {
+            projectData[type][index] = project;
+        }
+    } else {
+        projectData[type].push(project);
+    }
+    
+    saveAllProjects();
+    bootstrap.Modal.getInstance(document.getElementById('projectModal')).hide();
+    location.reload();
+}
+
+function saveAllProjects() {
+    fetch('{% url "admin_panel:manage_projects" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(projectData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('저장되었습니다.');
+        }
+    });
+}
+
+function downloadJSON() {
+    window.location.href = '{% url "admin_panel:download_projects_json" %}';
+}
+</script>
+{% endblock %}
+

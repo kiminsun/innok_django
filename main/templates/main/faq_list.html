@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}자주하는 질문 - INNOK{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <h1 class="h2 fw-bold mb-3">자주하는 질문</h1>
+            </div>
+        </div>
+        
+        <!-- 검색 폼 -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <form method="get" action="{% url 'main:faq_list' %}">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="제목, 질문, 글쓴이로 검색" value="{{ search_query }}">
+                        <button class="btn btn-primary" type="submit">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- FAQ 아코디언 -->
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="accordion" id="faqAccordion">
+                    {% for faq in page_obj %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ faq.id }}">
+                            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ faq.id }}">
+                                {{ faq.title }}
+                                {% if faq.answer %}
+                                <span class="badge bg-success ms-2">답변완료</span>
+                                {% else %}
+                                <span class="badge bg-warning ms-2">답변대기</span>
+                                {% endif %}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ faq.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <strong>질문:</strong>
+                                    <div>{{ faq.question|linebreaks }}</div>
+                                </div>
+                                {% if faq.answer %}
+                                <div class="border-top pt-3">
+                                    <strong class="text-success">답변:</strong>
+                                    <div>{{ faq.answer|linebreaks }}</div>
+                                    <small class="text-muted">답변일자: {{ faq.answered_at|date:"Y-m-d H:i" }}</small>
+                                </div>
+                                {% else %}
+                                <div class="alert alert-info mb-0">답변 대기 중입니다.</div>
+                                {% endif %}
+                                <div class="mt-3 text-end">
+                                    <small class="text-muted">
+                                        글쓴이: {{ faq.author }} | 조회: {{ faq.views }} | 등록일: {{ faq.created_at|date:"Y-m-d" }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-info text-center">등록된 FAQ가 없습니다.</div>
+                    {% endfor %}
+                </div>
+                
+                <!-- 페이지네이션 -->
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">이전</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">다음</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,46 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run migrations
+      run: |
+        python manage.py migrate --noinput
+      env:
+        DJANGO_SETTINGS_MODULE: innok_site.settings
+    
+    - name: Collect static files
+      run: |
+        python manage.py collectstatic --noinput
+      env:
+        DJANGO_SETTINGS_MODULE: innok_site.settings
+    
+    - name: Build check
+      run: |
+        python manage.py check --deploy
+      env:
+        DJANGO_SETTINGS_MODULE: innok_site.settings
+    
+    # 주의: GitHub Pages는 정적 사이트만 호스팅 가능
+    # Django 애플리케이션은 별도의 서버 필요 (Heroku, AWS 등)
+
