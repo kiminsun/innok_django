@@ -1,12 +1,13 @@
 {% load django_bootstrap5 %}
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="INNOK - 의료제품 GMP 교육 및 컨설팅 전문 기업">
-    <title>{% block title %}INNOK - 의료제품 GMP 교육 및 컨설팅{% endblock %}</title>
+    <meta name="description" content="{% if LANGUAGE_CODE == 'en' %}INNOK - Medical Product GMP Education and Consulting{% else %}INNOK - 의료제품 GMP 교육 및 컨설팅 전문 기업{% endif %}">
+    <title>{% block title %}{% if LANGUAGE_CODE == 'en' %}INNOK - Medical Product GMP Education and Consulting{% else %}INNOK - 의료제품 GMP 교육 및 컨설팅{% endif %}{% endblock %}</title>
     
     <!-- Bootstrap 5 CSS -->
     {% bootstrap_css %}
@@ -37,29 +38,61 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">홈</a>
+                        <a class="nav-link" href="{% url 'main:index' %}">{% if LANGUAGE_CODE == 'en' %}Home{% else %}홈{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/business">사업소개</a>
+                        <a class="nav-link" href="{% url 'main:business' %}">{% if LANGUAGE_CODE == 'en' %}Business{% else %}사업소개{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">회사소개</a>
+                        <a class="nav-link" href="{% url 'main:about' %}">{% if LANGUAGE_CODE == 'en' %}About Us{% else %}회사소개{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact">고객센터</a>
+                        <a class="nav-link" href="{% url 'main:contact' %}">{% if LANGUAGE_CODE == 'en' %}Contact{% else %}고객센터{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'main:notice_list' %}">공지사항</a>
+                        <a class="nav-link" href="{% url 'main:notice_list' %}">{% if LANGUAGE_CODE == 'en' %}Notice{% else %}공지사항{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'main:estimate_list' %}">견적문의</a>
+                        <a class="nav-link" href="{% url 'main:estimate_list' %}">{% if LANGUAGE_CODE == 'en' %}Inquiry{% else %}견적문의{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'main:faq_list' %}">자주하는질문</a>
+                        <a class="nav-link" href="{% url 'main:faq_list' %}">{% if LANGUAGE_CODE == 'en' %}FAQ{% else %}자주하는질문{% endif %}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'main:pr_center' %}">PR CENTER</a>
                     </li>
+                    <!-- 언어 전환 드롭다운 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if LANGUAGE_CODE == 'en' %}🇺🇸 EN{% else %}🇰🇷 KO{% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="#" id="langKo">🇰🇷 한국어</a></li>
+                            <li><a class="dropdown-item" href="#" id="langEn">🇺🇸 English</a></li>
+                        </ul>
+                    </li>
+                    <script>
+                        // 언어 전환 URL 설정
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const currentPath = window.location.pathname;
+                            const langKo = document.getElementById('langKo');
+                            const langEn = document.getElementById('langEn');
+                            
+                            // 현재 경로에서 /en/ prefix 제거하여 기본 경로 추출
+                            let basePath = currentPath;
+                            if (currentPath.startsWith('/en/')) {
+                                basePath = currentPath.substring(3); // '/en' 제거
+                            } else if (currentPath.startsWith('/en')) {
+                                basePath = currentPath.substring(3) || '/';
+                            }
+                            
+                            // 한국어: prefix 없이 (기본 언어)
+                            langKo.href = basePath || '/';
+                            
+                            // 영어: /en/ prefix 추가
+                            langEn.href = '/en' + basePath;
+                        });
+                    </script>
                 </ul>
             </div>
         </div>
@@ -76,14 +109,14 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5 class="mb-3">INNOK</h5>
-                    <p>의료제품 GMP 교육 및 컨설팅 전문 기업</p>
+                    <p>{% if LANGUAGE_CODE == 'en' %}Medical Product GMP Education and Consulting Specialist{% else %}의료제품 GMP 교육 및 컨설팅 전문 기업{% endif %}</p>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">관련 링크</h5>
+                    <h5 class="mb-3">{% if LANGUAGE_CODE == 'en' %}Related Links{% else %}관련 링크{% endif %}</h5>
                     <ul class="list-unstyled">
-                        <li><a href="https://www.mfds.go.kr" target="_blank" class="text-light text-decoration-none">식약처</a></li>
-                        <li><a href="https://www.gov.kr" target="_blank" class="text-light text-decoration-none">정부24</a></li>
-                        <li><a href="https://www.drugsafe.or.kr" target="_blank" class="text-light text-decoration-none">의약품안전나라</a></li>
+                        <li><a href="https://www.mfds.go.kr" target="_blank" class="text-light text-decoration-none">{% if LANGUAGE_CODE == 'en' %}MFDS{% else %}식약처{% endif %}</a></li>
+                        <li><a href="https://www.gov.kr" target="_blank" class="text-light text-decoration-none">{% if LANGUAGE_CODE == 'en' %}Gov.kr{% else %}정부24{% endif %}</a></li>
+                        <li><a href="https://www.drugsafe.or.kr" target="_blank" class="text-light text-decoration-none">{% if LANGUAGE_CODE == 'en' %}Drug Safety Korea{% else %}의약품안전나라{% endif %}</a></li>
                         <li><a href="https://www.hira.or.kr" target="_blank" class="text-light text-decoration-none">HIRA</a></li>
                         <li><a href="https://www.neca.or.kr" target="_blank" class="text-light text-decoration-none">NECA</a></li>
                     </ul>
@@ -91,9 +124,9 @@
                 <div class="col-md-4 mb-4">
                     <h5 class="mb-3">SNS</h5>
                     <ul class="list-unstyled">
-                        <li><a href="https://blog.naver.com/iosis1218" target="_blank" class="text-light text-decoration-none">네이버 블로그</a></li>
-                        <li><a href="https://www.instagram.com/innok_corporation/" target="_blank" class="text-light text-decoration-none">인스타그램</a></li>
-                        <li><a href="{% url 'main:contact' %}" class="text-light text-decoration-none">오시는 길</a></li>
+                        <li><a href="https://blog.naver.com/iosis1218" target="_blank" class="text-light text-decoration-none">{% if LANGUAGE_CODE == 'en' %}Naver Blog{% else %}네이버 블로그{% endif %}</a></li>
+                        <li><a href="https://www.instagram.com/innok_corporation/" target="_blank" class="text-light text-decoration-none">{% if LANGUAGE_CODE == 'en' %}Instagram{% else %}인스타그램{% endif %}</a></li>
+                        <li><a href="{% url 'main:contact' %}" class="text-light text-decoration-none">{% if LANGUAGE_CODE == 'en' %}Location{% else %}오시는 길{% endif %}</a></li>
                     </ul>
                 </div>
             </div>

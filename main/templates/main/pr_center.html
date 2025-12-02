@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}PR CENTER - INNOK{% endblock %}
 
@@ -9,14 +10,14 @@
         <div class="row mb-5">
             <div class="col-lg-12 text-center">
                 <h1 class="display-4 fw-bold mb-3">PR CENTER</h1>
-                <p class="lead">인녹케이의 다양한 활동을 소개합니다</p>
+                <p class="lead">{% if LANGUAGE_CODE == 'en' %}Discover INNOK's various activities{% else %}인녹케이의 다양한 활동을 소개합니다{% endif %}</p>
             </div>
         </div>
         
         <!-- 동영상 섹션 -->
         <div class="row mb-5">
             <div class="col-12">
-                <h2 class="mb-4 text-center">관련 동영상</h2>
+                <h2 class="mb-4 text-center">{% if LANGUAGE_CODE == 'en' %}Related Videos{% else %}관련 동영상{% endif %}</h2>
                 <div class="row justify-content-center">
                     <div class="col-lg-10 col-xl-8">
                         <div class="youtube-video-wrapper">
@@ -41,7 +42,7 @@
         <!-- 사진 갤러리 섹션 -->
         <div class="row">
             <div class="col-12">
-                <h2 class="mb-4">관련 사진</h2>
+                <h2 class="mb-4">{% if LANGUAGE_CODE == 'en' %}Photo Gallery{% else %}관련 사진{% endif %}</h2>
                 <div class="row g-4" id="photoGallery">
                     <!-- 사진이 여기에 표시됩니다 -->
                 </div>
@@ -53,12 +54,29 @@
 
 {% block extra_js %}
 <script>
+    const CURRENT_LANG = '{{ LANGUAGE_CODE }}';
+    
     // 사진 갤러리 표시
     const prData = {
         photos: [
-            { id: 1, title: "식약청 재직시절 약무감시에 대한 공로 표창장", url: "{% static 'img/4.jpg' %}" },
-            { id: 2, title: "식약청 20년 재직기념패", url: "{% static 'img/5.jpg' %}" },
-            { id: 3, title: "Korea Food & Drug administration CERTIFICATE", url: "{% static 'img/6.jpg' %}" }
+            { 
+                id: 1, 
+                title_ko: "식약청 재직시절 약무감시에 대한 공로 표창장", 
+                title_en: "Certificate of Commendation for Drug Surveillance during MFDS tenure",
+                url: "{% static 'img/4.jpg' %}" 
+            },
+            { 
+                id: 2, 
+                title_ko: "식약청 20년 재직기념패", 
+                title_en: "20 Years Service Plaque from MFDS",
+                url: "{% static 'img/5.jpg' %}" 
+            },
+            { 
+                id: 3, 
+                title_ko: "Korea Food & Drug Administration CERTIFICATE", 
+                title_en: "Korea Food & Drug Administration CERTIFICATE",
+                url: "{% static 'img/6.jpg' %}" 
+            }
         ]
     };
     
@@ -69,11 +87,12 @@
             const col = document.createElement('div');
             col.className = 'col-md-4';
             const imageUrl = photo.url;
+            const title = CURRENT_LANG === 'en' ? photo.title_en : photo.title_ko;
             col.innerHTML = `
                 <div class="card shadow-sm">
-                    <img src="${imageUrl}" class="card-img-top" alt="${photo.title}" style="height: 250px; object-fit: cover; cursor: pointer;" onclick="openLightbox('${imageUrl}')">
+                    <img src="${imageUrl}" class="card-img-top" alt="${title}" style="height: 250px; object-fit: cover; cursor: pointer;" onclick="openLightbox('${imageUrl}')">
                     <div class="card-body">
-                        <h5 class="card-title">${photo.title}</h5>
+                        <h5 class="card-title">${title}</h5>
                     </div>
                 </div>
             `;
@@ -130,4 +149,3 @@
 }
 </style>
 {% endblock %}
-

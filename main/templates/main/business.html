@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}사업소개 - INNOK{% endblock %}
+{% block title %}{% if LANGUAGE_CODE == 'en' %}Business - INNOK{% else %}사업소개 - INNOK{% endif %}{% endblock %}
 
 {% block content %}
 <section class="py-5 mt-5">
     <div class="container">
         <div class="row mb-5">
             <div class="col-lg-12 text-center">
-                <h1 class="display-4 fw-bold mb-3">사업소개</h1>
-                <p class="lead">전문적이고 차별화된 서비스를 제공합니다</p>
+                <h1 class="display-4 fw-bold mb-3">{% if LANGUAGE_CODE == 'en' %}Our Business{% else %}사업소개{% endif %}</h1>
+                <p class="lead">{% if LANGUAGE_CODE == 'en' %}We provide professional and differentiated services{% else %}전문적이고 차별화된 서비스를 제공합니다{% endif %}</p>
             </div>
         </div>
         
@@ -19,26 +20,26 @@
                 <div class="business-filter-wrapper">
                     <!-- 데스크톱: 탭 버튼 -->
                     <div class="business-filter-buttons d-none d-md-flex">
-                        <button type="button" class="btn btn-outline-primary active" data-type="all">전체</button>
-                        <button type="button" class="btn btn-outline-primary" data-type="specialized">특화사업</button>
-                        <button type="button" class="btn btn-outline-primary" data-type="general">일반사업</button>
-                        <button type="button" class="btn btn-outline-primary" data-type="education">교육사업</button>
-                        <button type="button" class="btn btn-outline-primary" data-type="regulatory">규제전문 에이전시</button>
-                        <button type="button" class="btn btn-outline-primary" data-type="m&a">브랜딩 지원 사업(M&A)</button>
+                        <button type="button" class="btn btn-outline-primary active" data-type="all">{% if LANGUAGE_CODE == 'en' %}All{% else %}전체{% endif %}</button>
+                        <button type="button" class="btn btn-outline-primary" data-type="specialized">{% if LANGUAGE_CODE == 'en' %}Specialized{% else %}특화사업{% endif %}</button>
+                        <button type="button" class="btn btn-outline-primary" data-type="general">{% if LANGUAGE_CODE == 'en' %}General{% else %}일반사업{% endif %}</button>
+                        <button type="button" class="btn btn-outline-primary" data-type="education">{% if LANGUAGE_CODE == 'en' %}Education{% else %}교육사업{% endif %}</button>
+                        <button type="button" class="btn btn-outline-primary" data-type="regulatory">{% if LANGUAGE_CODE == 'en' %}Regulatory Agency{% else %}규제전문 에이전시{% endif %}</button>
+                        <button type="button" class="btn btn-outline-primary" data-type="m&a">{% if LANGUAGE_CODE == 'en' %}Branding Support (M&A){% else %}브랜딩 지원 사업(M&A){% endif %}</button>
                     </div>
                     
                     <!-- 모바일: 드롭다운 -->
                     <div class="dropdown d-md-none">
                         <button class="btn btn-primary dropdown-toggle w-100" type="button" id="businessFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="selectedFilter">전체</span>
+                            <span id="selectedFilter">{% if LANGUAGE_CODE == 'en' %}All{% else %}전체{% endif %}</span>
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="businessFilterDropdown">
-                            <li><a class="dropdown-item active" href="#" data-type="all">전체</a></li>
-                            <li><a class="dropdown-item" href="#" data-type="specialized">특화사업</a></li>
-                            <li><a class="dropdown-item" href="#" data-type="general">일반사업</a></li>
-                            <li><a class="dropdown-item" href="#" data-type="education">교육사업</a></li>
-                            <li><a class="dropdown-item" href="#" data-type="regulatory">규제전문 에이전시</a></li>
-                            <li><a class="dropdown-item" href="#" data-type="m&a">브랜딩 지원 사업(M&A)</a></li>
+                            <li><a class="dropdown-item active" href="#" data-type="all">{% if LANGUAGE_CODE == 'en' %}All{% else %}전체{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="#" data-type="specialized">{% if LANGUAGE_CODE == 'en' %}Specialized{% else %}특화사업{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="#" data-type="general">{% if LANGUAGE_CODE == 'en' %}General{% else %}일반사업{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="#" data-type="education">{% if LANGUAGE_CODE == 'en' %}Education{% else %}교육사업{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="#" data-type="regulatory">{% if LANGUAGE_CODE == 'en' %}Regulatory Agency{% else %}규제전문 에이전시{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="#" data-type="m&a">{% if LANGUAGE_CODE == 'en' %}Branding Support (M&A){% else %}브랜딩 지원 사업(M&A){% endif %}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -64,18 +65,28 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="projectModalTitle">프로젝트 상세</h5>
+                <h5 class="modal-title" id="projectModalTitle">{% if LANGUAGE_CODE == 'en' %}Project Details{% else %}프로젝트 상세{% endif %}</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="projectModalBody">
                 <!-- 상세 내용이 여기에 로드됩니다 -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% if LANGUAGE_CODE == 'en' %}Close{% else %}닫기{% endif %}</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- 언어 변수 (JavaScript에서 사용) -->
+<script>
+    const CURRENT_LANG = '{{ LANGUAGE_CODE }}';
+    const LANG_TEXTS = {
+        description: CURRENT_LANG === 'en' ? 'Description' : '설명',
+        period: CURRENT_LANG === 'en' ? 'Period' : '기간',
+        client: CURRENT_LANG === 'en' ? 'Client' : '고객사'
+    };
+</script>
 {% endblock %}
 
 {% block extra_js %}
@@ -92,8 +103,8 @@
             });
     }
     
-    // 사업별 설명 텍스트 (이미지 스타일 레이아웃)
-    const businessDescriptions = {
+    // 사업별 설명 텍스트 (이미지 스타일 레이아웃) - 다국어 지원
+    const businessDescriptions_ko = {
         'specialized': `
             <div class="business-description-section mb-4">
                 <div class="business-section-header">
@@ -127,6 +138,88 @@
         'regulatory': '',
         'm&a': ''
     };
+    
+    const businessDescriptions_en = {
+        'specialized': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">We provide the big picture for GMP certification of medical products (pharmaceuticals, medical devices, bio, quasi-drugs, convergence products, cosmetics).</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-image">
+                        <img src="{% static 'img/3.JPG' %}" alt="GMP Certification Consulting" class="img-fluid">
+                    </div>
+                    <div class="business-section-text">
+                        <p>GMP certification requires step-by-step considerations, problem-solving capabilities, and response skills. With extensive experience in MFDS on-site inspections during GMP operations and equipped with rational response simulation capabilities, we provide one-stop solutions before and after certification. Our high success rate in certification and maintenance has led many clients to establish regular consulting contracts for trouble-shooting or employee competency enhancement training.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Comprehensive thinking, extensive network, and above all, strong driving force</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-image">
+                        <img src="{% static 'img/2.JPG' %}" alt="Consulting Network" class="img-fluid">
+                    </div>
+                    <div class="business-section-text">
+                        <p>As consultants from MFDS and health welfare sectors, we build rapport with relevant administrative departments. With excellent work capabilities, we never give up even with just 1% possibility, mobilizing our network for problem-solving and regulatory analysis. We handle everything from the client's perspective with strong driving force, which is why we boast a high success rate.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'general': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">General Consulting Services</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>We provide comprehensive consulting services through standardized processes to meet your business needs efficiently and effectively.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'education': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Professional Education Programs</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>We offer specialized education programs designed to enhance your team's expertise in GMP regulations, compliance, and best practices in the pharmaceutical and medical device industries.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'regulatory': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Regulatory Affairs Agency Services</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>Our regulatory agency services help navigate complex regulatory requirements, ensuring compliance with Korean MFDS regulations and international standards for market access.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'm&a': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Branding Support & M&A Consulting</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>We provide strategic branding support and M&A consulting services to help pharmaceutical and healthcare companies grow, expand, and achieve their business objectives.</p>
+                    </div>
+                </div>
+            </div>
+        `
+    };
+    
+    // 현재 언어에 따라 적절한 설명 선택
+    const businessDescriptions = CURRENT_LANG === 'en' ? businessDescriptions_en : businessDescriptions_ko;
     
     function displayProjects(data, filterType) {
         const gallery = document.getElementById('projectGallery');
@@ -182,9 +275,9 @@
                 document.getElementById('projectModalTitle').textContent = data.title;
                 document.getElementById('projectModalBody').innerHTML = `
                     <img src="${data.image || '/static/images/placeholder.jpg'}" class="img-fluid mb-3" alt="${data.title}">
-                    <p><strong>설명:</strong> ${data.description || ''}</p>
-                    <p><strong>기간:</strong> ${data.startDate} ~ ${data.endDate}</p>
-                    <p><strong>고객사:</strong> ${data.client || ''}</p>
+                    <p><strong>${LANG_TEXTS.description}:</strong> ${data.description || ''}</p>
+                    <p><strong>${LANG_TEXTS.period}:</strong> ${data.startDate} ~ ${data.endDate}</p>
+                    <p><strong>${LANG_TEXTS.client}:</strong> ${data.client || ''}</p>
                 `;
                 new bootstrap.Modal(document.getElementById('projectModal')).show();
             });

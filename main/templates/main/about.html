@@ -1,28 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}회사소개 - INNOK{% endblock %}
+{% block title %}{% if LANGUAGE_CODE == 'en' %}About Us - INNOK{% else %}회사소개 - INNOK{% endif %}{% endblock %}
 
 {% block content %}
 <section class="py-5 mt-5">
     <div class="container" data-aos="fade-up">
         <div class="row mb-5">
             <div class="col-lg-12 text-center">
-                <h1 class="display-4 fw-bold mb-3">회사소개</h1>
+                <h1 class="display-4 fw-bold mb-3">{% if LANGUAGE_CODE == 'en' %}About Us{% else %}회사소개{% endif %}</h1>
             </div>
         </div>
         
         <div class="row align-items-center mb-5">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <img src="{% static 'img/ceo.JPG' %}" alt="INNOK 회사 소개" class="img-fluid rounded shadow" id="companyImage">
+                <img src="{% static 'img/ceo.JPG' %}" alt="{% if LANGUAGE_CODE == 'en' %}About INNOK{% else %}INNOK 회사 소개{% endif %}" class="img-fluid rounded shadow" id="companyImage">
             </div>
             <div class="col-lg-6">
                 <h2 class="mb-4">INNOK</h2>
                 <p class="lead mb-4" id="companySlogan">
+                    {% if LANGUAGE_CODE == 'en' %}
+                    Based on 23 years of extensive pharmaceutical administration experience<br>
+                    at various government agencies including the Ministry of Health and Welfare,<br>
+                    MFDS, and Ministry of Education,<br>
+                    we provide differentiated and specialized professional consulting<br>
+                    to deliver the best solutions for our clients.
+                    {% else %}
                     보건복지부, 식약처, 교육부 등 다양한 정부 기관에서 쌓은,<br>
                     23년간의 광범위한 약무행정실무 경력을 바탕으로,<br>
                     차별·특화된 전문 맞춤 상담을 통하여,<br>
                     고객의 의뢰에 대한 최선의 해답을 제시해 드리겠습니다.
+                    {% endif %}
                 </p>
             </div>
         </div>
@@ -36,8 +45,13 @@
 
 {% block extra_js %}
 <script>
-    // JSON에서 회사 정보 로드
-    fetch('/data/about.json')
+    const CURRENT_LANG = '{{ LANGUAGE_CODE }}';
+    const historyTitle = CURRENT_LANG === 'en' ? 'Company History' : '회사 연혁';
+    
+    // JSON에서 회사 정보 로드 (언어별 파일)
+    const jsonPath = CURRENT_LANG === 'en' ? '/data/en/about.json' : '/data/about.json';
+    
+    fetch(jsonPath)
         .then(response => response.json())
         .then(data => {
             if (data.representativeImage) {
@@ -50,7 +64,7 @@
             // 연혁 표시
             if (data.history && data.history.length > 0) {
                 const historyDiv = document.getElementById('companyHistory');
-                let historyHTML = '<div class="col-12"><h3 class="mb-4">회사 연혁</h3><div class="timeline">';
+                let historyHTML = `<div class="col-12"><h3 class="mb-4">${historyTitle}</h3><div class="timeline">`;
                 data.history.forEach(item => {
                     historyHTML += `
                         <div class="timeline-item mb-4">

@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load i18n %}
 
-{% block title %}공지사항 - INNOK{% endblock %}
+{% block title %}{% if LANGUAGE_CODE == 'en' %}Notice - INNOK{% else %}공지사항 - INNOK{% endif %}{% endblock %}
 
 {% block content %}
 <section class="py-5 mt-5">
     <div class="container">
         <div class="row mb-4">
             <div class="col-lg-12">
-                <h1 class="h2 fw-bold mb-3">공지사항</h1>
+                <h1 class="h2 fw-bold mb-3">{% if LANGUAGE_CODE == 'en' %}Notice{% else %}공지사항{% endif %}</h1>
             </div>
         </div>
         
@@ -17,8 +18,8 @@
             <div class="col-lg-6">
                 <form method="get" action="{% url 'main:notice_list' %}">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="제목, 내용, 글쓴이로 검색" value="{{ search_query }}">
-                        <button class="btn btn-primary" type="submit">검색</button>
+                        <input type="text" name="search" class="form-control" placeholder="{% if LANGUAGE_CODE == 'en' %}Search by title, content, author{% else %}제목, 내용, 글쓴이로 검색{% endif %}" value="{{ search_query }}">
+                        <button class="btn btn-primary" type="submit">{% if LANGUAGE_CODE == 'en' %}Search{% else %}검색{% endif %}</button>
                     </div>
                 </form>
             </div>
@@ -31,11 +32,11 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>번호</th>
-                                <th>제목</th>
-                                <th>글쓴이</th>
-                                <th>조회</th>
-                                <th>등록일자</th>
+                                <th>{% if LANGUAGE_CODE == 'en' %}No.{% else %}번호{% endif %}</th>
+                                <th>{% if LANGUAGE_CODE == 'en' %}Title{% else %}제목{% endif %}</th>
+                                <th>{% if LANGUAGE_CODE == 'en' %}Author{% else %}글쓴이{% endif %}</th>
+                                <th>{% if LANGUAGE_CODE == 'en' %}Views{% else %}조회{% endif %}</th>
+                                <th>{% if LANGUAGE_CODE == 'en' %}Date{% else %}등록일자{% endif %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,7 +50,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center">등록된 공지사항이 없습니다.</td>
+                                <td colspan="5" class="text-center">{% if LANGUAGE_CODE == 'en' %}No notices registered.{% else %}등록된 공지사항이 없습니다.{% endif %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -62,7 +63,7 @@
                     <ul class="pagination justify-content-center">
                         {% if page_obj.has_previous %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">이전</a>
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">{% if LANGUAGE_CODE == 'en' %}Prev{% else %}이전{% endif %}</a>
                         </li>
                         {% endif %}
                         
@@ -80,7 +81,7 @@
                         
                         {% if page_obj.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">다음</a>
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">{% if LANGUAGE_CODE == 'en' %}Next{% else %}다음{% endif %}</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -91,4 +92,3 @@
     </div>
 </section>
 {% endblock %}
-

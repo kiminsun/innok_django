@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load i18n %}
 
-{% block title %}{{ estimate.title }} - 견적문의 - INNOK{% endblock %}
+{% block title %}{{ estimate.title }} - {% if LANGUAGE_CODE == 'en' %}Inquiry{% else %}견적문의{% endif %} - INNOK{% endblock %}
 
 {% block content %}
 <section class="py-5 mt-5">
@@ -16,15 +17,15 @@
                 {% if not estimate.views %}
                 <div class="card shadow mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">비밀번호 확인</h5>
+                        <h5 class="card-title">{% if LANGUAGE_CODE == 'en' %}Password Verification{% else %}비밀번호 확인{% endif %}</h5>
                         <form method="post">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label for="password" class="form-label">비밀번호</label>
+                                <label for="password" class="form-label">{% if LANGUAGE_CODE == 'en' %}Password{% else %}비밀번호{% endif %}</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">확인</button>
-                            <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary">목록으로</a>
+                            <button type="submit" class="btn btn-primary">{% if LANGUAGE_CODE == 'en' %}Confirm{% else %}확인{% endif %}</button>
+                            <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary">{% if LANGUAGE_CODE == 'en' %}Back to List{% else %}목록으로{% endif %}</a>
                         </form>
                     </div>
                 </div>
@@ -38,33 +39,33 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <small class="text-muted">
-                                <strong>글쓴이:</strong> {{ estimate.author }} | 
-                                <strong>조회수:</strong> {{ estimate.views }} | 
-                                <strong>등록일자:</strong> {{ estimate.created_at|date:"Y-m-d H:i" }}
+                                <strong>{% if LANGUAGE_CODE == 'en' %}Author:{% else %}글쓴이:{% endif %}</strong> {{ estimate.author }} | 
+                                <strong>{% if LANGUAGE_CODE == 'en' %}Views:{% else %}조회수:{% endif %}</strong> {{ estimate.views }} | 
+                                <strong>{% if LANGUAGE_CODE == 'en' %}Date:{% else %}등록일자:{% endif %}</strong> {{ estimate.created_at|date:"Y-m-d H:i" }}
                             </small>
                         </div>
                         
                         <div class="content mb-4">
-                            <h5>문의 내용</h5>
+                            <h5>{% if LANGUAGE_CODE == 'en' %}Inquiry Details{% else %}문의 내용{% endif %}</h5>
                             {{ estimate.content|linebreaks }}
                         </div>
                         
                         {% if estimate.answer %}
                         <div class="answer-section border-top pt-4">
-                            <h5 class="text-success">답변</h5>
+                            <h5 class="text-success">{% if LANGUAGE_CODE == 'en' %}Answer{% else %}답변{% endif %}</h5>
                             <div class="answer-content">
                                 {{ estimate.answer|linebreaks }}
                             </div>
-                            <small class="text-muted">답변일자: {{ estimate.answered_at|date:"Y-m-d H:i" }}</small>
+                            <small class="text-muted">{% if LANGUAGE_CODE == 'en' %}Answered on:{% else %}답변일자:{% endif %} {{ estimate.answered_at|date:"Y-m-d H:i" }}</small>
                         </div>
                         {% else %}
                         <div class="alert alert-info">
-                            답변 대기 중입니다. 빠른 시일 내에 답변 드리겠습니다.
+                            {% if LANGUAGE_CODE == 'en' %}Waiting for answer. We will reply as soon as possible.{% else %}답변 대기 중입니다. 빠른 시일 내에 답변 드리겠습니다.{% endif %}
                         </div>
                         {% endif %}
                     </div>
                     <div class="card-footer">
-                        <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary">목록으로</a>
+                        <a href="{% url 'main:estimate_list' %}" class="btn btn-secondary">{% if LANGUAGE_CODE == 'en' %}Back to List{% else %}목록으로{% endif %}</a>
                     </div>
                 </div>
                 {% endif %}
@@ -73,4 +74,3 @@
     </div>
 </section>
 {% endblock %}
-

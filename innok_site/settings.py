@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-+knivw1j-d5#=+v#lbcxgw#_uyjm0$vtgo5^_g7fz0$4lq7de3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [yoonseo03.pythonanywhere.com]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yoonseo03.pythonanywhere.com']
 
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # 다국어 지원을 위한 미들웨어
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',  # 다국어 지원 (LANGUAGE_CODE 등)
             ],
         },
     },
@@ -103,16 +106,27 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# Internationalization (다국어 설정)
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
+LANGUAGE_CODE = 'ko'  # 기본 언어: 한국어
+
+# 지원 언어 목록
+LANGUAGES = [
+    ('ko', _('Korean')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
+
+# 번역 파일 경로
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 
 # Static files (CSS, JavaScript, Images)

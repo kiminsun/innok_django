@@ -1,26 +1,44 @@
 """
-메인 뷰 함수
+메인 뷰 함수 - 다국어 지원
 """
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.utils.translation import get_language
 from .models import Notice, Estimate, FAQ
 import json
 import os
 from django.conf import settings
 
 
+def get_json_data_path(filename):
+    """
+    현재 언어에 따라 JSON 데이터 파일 경로를 반환
+    영문 버전이 없으면 기본 한국어 버전 반환
+    """
+    lang = get_language()
+    if lang == 'en':
+        en_path = settings.JSON_DATA_DIR / 'en' / filename
+        if os.path.exists(en_path):
+            return en_path
+    # 기본 한국어 버전 반환
+    return settings.JSON_DATA_DIR / filename
+
+
 def index(request):
     """메인 페이지"""
-    return render(request, 'main/index.html')
+    lang = get_language()
+    return render(request, 'main/index.html', {'lang': lang})
 
 
 def business(request):
-    """사업소개 페이지"""
+    """사업소개 페이지 - 다국어 지원"""
+    lang = get_language()
+    
     # JSON 형식 요청 처리
     if request.GET.get('format') == 'json':
         from django.http import JsonResponse
-        json_path = settings.JSON_DATA_DIR / 'projects.json'
+        json_path = get_json_data_path('projects.json')
         try:
             with open(json_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -39,17 +57,39 @@ def business(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     
-    return render(request, 'main/business.html')
+    return render(request, 'main/business.html', {'lang': lang})
 
 
 def about(request):
-    """회사소개 페이지"""
-    return render(request, 'main/about.html')
+    """회사소개 페이지 - 다국어 지원"""
+    lang = get_language()
+    
+    # 회사소개 데이터 로드
+    json_path = get_json_data_path('about.json')
+    about_data = {}
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            about_data = json.load(f)
+    except Exception:
+        pass
+    
+    return render(request, 'main/about.html', {'lang': lang, 'about_data': about_data})
 
 
 def contact(request):
-    """고객센터 페이지"""
-    return render(request, 'main/contact.html')
+    """고객센터 페이지 - 다국어 지원"""
+    lang = get_language()
+    
+    # 연락처 데이터 로드
+    json_path = get_json_data_path('contact.json')
+    contact_data = {}
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            contact_data = json.load(f)
+    except Exception:
+        pass
+    
+    return render(request, 'main/contact.html', {'lang': lang, 'contact_data': contact_data})
 
 
 def notice_list(request):

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}{{ notice.title }} - 공지사항 - INNOK{% endblock %}
+{% block title %}{{ notice.title }} - {% if LANGUAGE_CODE == 'en' %}Notice{% else %}공지사항{% endif %} - INNOK{% endblock %}
 
 {% block content %}
 <section class="py-5 mt-5">
@@ -14,15 +15,15 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <small class="text-muted">
-                                <strong>글쓴이:</strong> {{ notice.author }} | 
-                                <strong>조회수:</strong> {{ notice.views }} | 
-                                <strong>등록일자:</strong> {{ notice.created_at|date:"Y-m-d H:i" }}
+                                <strong>{% if LANGUAGE_CODE == 'en' %}Author:{% else %}글쓴이:{% endif %}</strong> {{ notice.author }} | 
+                                <strong>{% if LANGUAGE_CODE == 'en' %}Views:{% else %}조회수:{% endif %}</strong> {{ notice.views }} | 
+                                <strong>{% if LANGUAGE_CODE == 'en' %}Date:{% else %}등록일자:{% endif %}</strong> {{ notice.created_at|date:"Y-m-d H:i" }}
                             </small>
                         </div>
                         
                         {% if notice.attachment %}
                         <div class="mb-3">
-                            <a href="{{ notice.attachment.url }}" class="btn btn-sm btn-outline-primary" download>첨부파일 다운로드</a>
+                            <a href="{{ notice.attachment.url }}" class="btn btn-sm btn-outline-primary" download>{% if LANGUAGE_CODE == 'en' %}Download Attachment{% else %}첨부파일 다운로드{% endif %}</a>
                         </div>
                         {% endif %}
                         
@@ -31,7 +32,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="{% url 'main:notice_list' %}" class="btn btn-secondary">목록으로</a>
+                        <a href="{% url 'main:notice_list' %}" class="btn btn-secondary">{% if LANGUAGE_CODE == 'en' %}Back to List{% else %}목록으로{% endif %}</a>
                     </div>
                 </div>
             </div>
@@ -39,4 +40,3 @@
     </div>
 </section>
 {% endblock %}
-
