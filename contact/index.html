@@ -1,7 +1,8 @@
 
 
+
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,13 +41,13 @@
                         <a class="nav-link" href"/innok_django/">홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href"/innok_django/business">사업소개</a>
+                        <a class="nav-link" href"/innok_django/business/">사업소개</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href"/innok_django/about">회사소개</a>
+                        <a class="nav-link" href"/innok_django/about/">회사소개</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href"/innok_django/contact">고객센터</a>
+                        <a class="nav-link" href"/innok_django/contact/">고객센터</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href"/innok_django/notice/">공지사항</a>
@@ -60,6 +61,38 @@
                     <li class="nav-item">
                         <a class="nav-link" href"/innok_django/pr/">PR CENTER</a>
                     </li>
+                    <!-- 언어 전환 드롭다운 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🇰🇷 KO
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="#" id="langKo">🇰🇷 한국어</a></li>
+                            <li><a class="dropdown-item" href="#" id="langEn">🇺🇸 English</a></li>
+                        </ul>
+                    </li>
+                    <script>
+                        // 언어 전환 URL 설정
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const currentPath = window.location.pathname;
+                            const langKo = document.getElementById('langKo');
+                            const langEn = document.getElementById('langEn');
+                            
+                            // 현재 경로에서 /en/ prefix 제거하여 기본 경로 추출
+                            let basePath = currentPath;
+                            if (currentPath.startsWith('/en/')) {
+                                basePath = currentPath.substring(3); // '/en' 제거
+                            } else if (currentPath.startsWith('/en')) {
+                                basePath = currentPath.substring(3) || '/';
+                            }
+                            
+                            // 한국어: prefix 없이 (기본 언어)
+                            langKo.href = basePath || '/';
+                            
+                            // 영어: /en/ prefix 추가
+                            langEn.href = '/en' + basePath;
+                        });
+                    </script>
                 </ul>
             </div>
         </div>
@@ -181,8 +214,12 @@
     
     
 <script>
-    // 연락처 정보 로드
-    fetch('/data/contact.json')
+    const CURRENT_LANG = '';
+    
+    // 연락처 정보 로드 (언어별 파일)
+    const jsonPath = CURRENT_LANG === 'en' ? '/data/en/contact.json' : '/data/contact.json';
+    
+    fetch(jsonPath)
         .then(response => response.json())
         .then(data => {
             if (data.businessHours) document.getElementById('businessHours').textContent = data.businessHours;

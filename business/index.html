@@ -1,7 +1,8 @@
 
 
+
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,13 +41,13 @@
                         <a class="nav-link" href"/innok_django/">홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href"/innok_django/business">사업소개</a>
+                        <a class="nav-link" href"/innok_django/business/">사업소개</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href"/innok_django/about">회사소개</a>
+                        <a class="nav-link" href"/innok_django/about/">회사소개</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href"/innok_django/contact">고객센터</a>
+                        <a class="nav-link" href"/innok_django/contact/">고객센터</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href"/innok_django/notice/">공지사항</a>
@@ -60,6 +61,38 @@
                     <li class="nav-item">
                         <a class="nav-link" href"/innok_django/pr/">PR CENTER</a>
                     </li>
+                    <!-- 언어 전환 드롭다운 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🇰🇷 KO
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item" href="#" id="langKo">🇰🇷 한국어</a></li>
+                            <li><a class="dropdown-item" href="#" id="langEn">🇺🇸 English</a></li>
+                        </ul>
+                    </li>
+                    <script>
+                        // 언어 전환 URL 설정
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const currentPath = window.location.pathname;
+                            const langKo = document.getElementById('langKo');
+                            const langEn = document.getElementById('langEn');
+                            
+                            // 현재 경로에서 /en/ prefix 제거하여 기본 경로 추출
+                            let basePath = currentPath;
+                            if (currentPath.startsWith('/en/')) {
+                                basePath = currentPath.substring(3); // '/en' 제거
+                            } else if (currentPath.startsWith('/en')) {
+                                basePath = currentPath.substring(3) || '/';
+                            }
+                            
+                            // 한국어: prefix 없이 (기본 언어)
+                            langKo.href = basePath || '/';
+                            
+                            // 영어: /en/ prefix 추가
+                            langEn.href = '/en' + basePath;
+                        });
+                    </script>
                 </ul>
             </div>
         </div>
@@ -141,6 +174,16 @@
     </div>
 </div>
 
+<!-- 언어 변수 (JavaScript에서 사용) -->
+<script>
+    const CURRENT_LANG = '';
+    const LANG_TEXTS = {
+        description: CURRENT_LANG === 'en' ? 'Description' : '설명',
+        period: CURRENT_LANG === 'en' ? 'Period' : '기간',
+        client: CURRENT_LANG === 'en' ? 'Client' : '고객사'
+    };
+</script>
+
     </main>
 
     <!-- 푸터 -->
@@ -200,8 +243,8 @@
             });
     }
     
-    // 사업별 설명 텍스트 (이미지 스타일 레이아웃)
-    const businessDescriptions = {
+    // 사업별 설명 텍스트 (이미지 스타일 레이아웃) - 다국어 지원
+    const businessDescriptions_ko = {
         'specialized': `
             <div class="business-description-section mb-4">
                 <div class="business-section-header">
@@ -235,6 +278,88 @@
         'regulatory': '',
         'm&a': ''
     };
+    
+    const businessDescriptions_en = {
+        'specialized': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">We provide the big picture for GMP certification of medical products (pharmaceuticals, medical devices, bio, quasi-drugs, convergence products, cosmetics).</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-image">
+                        <img src="/static/img/3.JPG" alt="GMP Certification Consulting" class="img-fluid">
+                    </div>
+                    <div class="business-section-text">
+                        <p>GMP certification requires step-by-step considerations, problem-solving capabilities, and response skills. With extensive experience in MFDS on-site inspections during GMP operations and equipped with rational response simulation capabilities, we provide one-stop solutions before and after certification. Our high success rate in certification and maintenance has led many clients to establish regular consulting contracts for trouble-shooting or employee competency enhancement training.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Comprehensive thinking, extensive network, and above all, strong driving force</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-image">
+                        <img src="/static/img/2.JPG" alt="Consulting Network" class="img-fluid">
+                    </div>
+                    <div class="business-section-text">
+                        <p>As consultants from MFDS and health welfare sectors, we build rapport with relevant administrative departments. With excellent work capabilities, we never give up even with just 1% possibility, mobilizing our network for problem-solving and regulatory analysis. We handle everything from the client's perspective with strong driving force, which is why we boast a high success rate.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'general': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">General Consulting Services</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>We provide comprehensive consulting services through standardized processes to meet your business needs efficiently and effectively.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'education': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Professional Education Programs</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>We offer specialized education programs designed to enhance your team's expertise in GMP regulations, compliance, and best practices in the pharmaceutical and medical device industries.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'regulatory': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Regulatory Affairs Agency Services</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>Our regulatory agency services help navigate complex regulatory requirements, ensuring compliance with Korean MFDS regulations and international standards for market access.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        'm&a': `
+            <div class="business-description-section mb-4">
+                <div class="business-section-header">
+                    <h3 class="mb-0">Branding Support & M&A Consulting</h3>
+                </div>
+                <div class="business-section-content">
+                    <div class="business-section-text">
+                        <p>We provide strategic branding support and M&A consulting services to help pharmaceutical and healthcare companies grow, expand, and achieve their business objectives.</p>
+                    </div>
+                </div>
+            </div>
+        `
+    };
+    
+    // 현재 언어에 따라 적절한 설명 선택
+    const businessDescriptions = CURRENT_LANG === 'en' ? businessDescriptions_en : businessDescriptions_ko;
     
     function displayProjects(data, filterType) {
         const gallery = document.getElementById('projectGallery');
@@ -290,9 +415,9 @@
                 document.getElementById('projectModalTitle').textContent = data.title;
                 document.getElementById('projectModalBody').innerHTML = `
                     <img src="${data.image || '/static/images/placeholder.jpg'}" class="img-fluid mb-3" alt="${data.title}">
-                    <p><strong>설명:</strong> ${data.description || ''}</p>
-                    <p><strong>기간:</strong> ${data.startDate} ~ ${data.endDate}</p>
-                    <p><strong>고객사:</strong> ${data.client || ''}</p>
+                    <p><strong>${LANG_TEXTS.description}:</strong> ${data.description || ''}</p>
+                    <p><strong>${LANG_TEXTS.period}:</strong> ${data.startDate} ~ ${data.endDate}</p>
+                    <p><strong>${LANG_TEXTS.client}:</strong> ${data.client || ''}</p>
                 `;
                 new bootstrap.Modal(document.getElementById('projectModal')).show();
             });
